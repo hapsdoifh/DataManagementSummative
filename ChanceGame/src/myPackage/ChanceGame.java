@@ -4,6 +4,8 @@
  */
 package myPackage;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.swing.*;
 
 /**
  *
@@ -15,10 +17,13 @@ public class ChanceGame extends javax.swing.JFrame {
      * Creates new form ChanceGame
      */
     Graphics2D g2d;
+    BufferedImage buffImage;
+    int score;
     
     public ChanceGame() {
         initComponents();
-        g2d = (Graphics2D)jPanel1.getGraphics();
+        //g2d = (Graphics2D)jPanel1.getGraphics();
+        buffImage = new BufferedImage(jPanel1.getSize().width,jPanel1.getSize().height, BufferedImage.TYPE_INT_BGR);
     }
 
     /**
@@ -31,12 +36,33 @@ public class ChanceGame extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(400, 400));
+        addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                formFocusGained(evt);
+            }
+        });
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                formMouseReleased(evt);
+            }
+        });
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
+            }
+        });
+
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel1MouseClicked(evt);
             }
         });
 
@@ -44,28 +70,28 @@ public class ChanceGame extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 388, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(394, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 388, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(394, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -73,18 +99,61 @@ public class ChanceGame extends javax.swing.JFrame {
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         // TODO add your handling code here:
-        this.setPreferredSize(new Dimension(400,400));
-        jPanel1.setPreferredSize(new Dimension(388,388));
-        int incre = jPanel1.getSize().height/3;
+    }//GEN-LAST:event_formWindowActivated
+    public void updateGrid(){        
+        //this.setPreferredSize(new Dimension(this.getSize().width,this.getSize().height));
+        //jPanel1.setPreferredSize(new Dimension(this.getSize().width,this.getSize().height));
+        jPanel1.setSize(new Dimension((int)(this.getSize().width*0.9),(int)(this.getSize().height*0.9)));
+
+        //buffImage = new BufferedImage((int)(jPanel1.getPreferredSize().width ),(int)(jPanel1.getPreferredSize().height), BufferedImage.TYPE_INT_ARGB);
+        buffImage = new BufferedImage((int)(jPanel1.getWidth()),(int)(jPanel1.getHeight()), BufferedImage.TYPE_INT_ARGB);
+         //g2d = (Graphics2D)jPanel1.getGraphics();
+        g2d = (Graphics2D)buffImage.getGraphics();
+        int H = (buffImage.getHeight()-10)/3, W = (buffImage.getWidth()-10)/3;
+        int incre = H < W ? H : W;
         for(int y = 0; y<3; y++){
-            for(int x = 0; x<3; x++){                 
-                g2d.setColor(new Color(0,0,0)); 
-                g2d.drawRect(x*incre, y*incre,incre+1,incre+1);
-                g2d.setColor(new Color(0,0,0)); 
-                g2d.drawRect(x*incre, y*incre,incre+1,incre+1);
+            for(int x = 0; x<3; x++){             
+                g2d.setStroke(new BasicStroke(4));
+                g2d.setColor(new Color(100,100,200)); 
+                g2d.drawRect(x*incre, y*incre,incre-2,incre-2);                
             }           
         }
-    }//GEN-LAST:event_formWindowActivated
+        System.out.println(jPanel1.getPreferredSize().width);
+        jLabel1.setSize(new Dimension(this.getSize().width,this.getSize().height));
+        jLabel1.setIcon(new ImageIcon(buffImage));
+    }
+    
+    
+    private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
+        // TODO add your handling code here:
+        updateGrid();
+    }//GEN-LAST:event_formFocusGained
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        // TODO add your handling code here:
+        updateGrid();         
+    }//GEN-LAST:event_formComponentResized
+
+    private void formMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseReleased
+        // TODO add your handling code here:
+        //updateGrid();
+    }//GEN-LAST:event_formMouseReleased
+
+    private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
+        // TODO add your handling code here:
+        Point mouseP = jPanel1.getMousePosition();
+        int H = (buffImage.getHeight()-10)/3, W = (buffImage.getWidth()-10)/3;
+        int incre = H < W ? H : W;
+        for(int row = 0; row <3; row ++){
+            for(int col = 0; col < 3; col++){
+                if(mouseP.y>row*incre && mouseP.y<row*incre+incre && mouseP.x>col*incre && mouseP.x<col*incre+incre){
+                    g2d.setColor(new Color(0,255,0)); 
+                    g2d.fillRect(col*incre+1, row*incre+1, incre-3, incre-3);                         
+                }
+            }
+        }
+        jLabel1.setIcon(new ImageIcon(buffImage));
+    }//GEN-LAST:event_jPanel1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -122,6 +191,7 @@ public class ChanceGame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }
