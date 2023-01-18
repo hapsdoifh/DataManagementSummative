@@ -47,6 +47,7 @@ public class ChanceGame extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(100, 100, 250));
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 formFocusGained(evt);
@@ -137,7 +138,7 @@ public class ChanceGame extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowActivated
     public void updateGrid(){        
         //this.setPreferredSize(new Dimension(this.getSize().width,this.getSize().height));
-        //jPanel1.setPreferredSize(new Dimension(this.getContentPane().getWidth(),this.getContentPane().getHeight()-60));
+        jPanel1.setPreferredSize(new Dimension(this.getContentPane().getWidth(),this.getContentPane().getHeight()-60));
         
         //jPanel1.setSize(new Dimension((int)(this.getSize().width*0.9),(int)(this.getSize().height*0.9)));
         jPanel1.setSize(new Dimension((int)(jPanel1.getPreferredSize().width),(int)(jPanel1.getPreferredSize().height)));
