@@ -19,7 +19,8 @@ public class ChanceGame extends javax.swing.JFrame {
      */
     Graphics2D g2d;
     BufferedImage buffImage;
-    int score=0;
+    public static int score=0;
+    int roundCounter = 4;
     int brdSze = 15;
     int[][] GameBoard = new int[brdSze][brdSze];
     
@@ -181,16 +182,17 @@ public class ChanceGame extends javax.swing.JFrame {
 
     private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
         // TODO add your handling code here:
+        roundCounter--;     
         Point mouseP = jPanel1.getMousePosition();
         int H = (buffImage.getHeight()-10)/brdSze, W = (buffImage.getWidth()-10)/brdSze;
         int incre = H < W ? H : W;
         for(int row = 0; row <brdSze; row ++){
             for(int col = 0; col < brdSze; col++){
                 if(mouseP.y>row*incre && mouseP.y<row*incre+incre && mouseP.x>col*incre && mouseP.x<col*incre+incre){
-                    if(GameBoard[row][col] == 4){
+                    if(GameBoard[row][col] == 6){
                         g2d.setColor(new Color(0,255,0)); 
                         g2d.fillRect(col*incre+2, row*incre+2, incre-4, incre-4);
-                    }else if(GameBoard[row][col] == 2){
+                    }else if(GameBoard[row][col] == 3){
                         g2d.setColor(new Color(255,0,0)); 
                         g2d.fillRect(col*incre+2, row*incre+2, incre-4, incre-4);
                     }else if(GameBoard[row][col] == 1){
@@ -206,6 +208,10 @@ public class ChanceGame extends javax.swing.JFrame {
             }
         }
         jLabel1.setIcon(new ImageIcon(buffImage));
+        if(roundCounter <0){            
+            roundCounter = 4;
+            new ScoreWindow().setVisible(true);
+        }
     }//GEN-LAST:event_jPanel1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -214,6 +220,7 @@ public class ChanceGame extends javax.swing.JFrame {
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         // TODO add your handling code here:
+        roundCounter = 4;
         randomize();
         updateGrid();
     }//GEN-LAST:event_jButton2MouseClicked
