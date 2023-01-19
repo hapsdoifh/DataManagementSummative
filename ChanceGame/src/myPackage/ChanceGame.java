@@ -257,11 +257,12 @@ public class ChanceGame extends javax.swing.JFrame {
                             ind ++;
                         }
                         DisplayCol = ColList[ind];
-                        new ScoreWindow().setVisible(true);
                         score = GameBoard[row][col];
+                        new ScoreWindow().setVisible(true);
                         g2d.setColor(ColList[ind]); 
                     }else{
                         DisplayCol = new Color(0,0,0);
+                        score = GameBoard[row][col];
                         new ScoreWindow().setVisible(true);
                         g2d.setColor(DisplayCol);                         
                     }                    
