@@ -20,10 +20,14 @@ public class ChanceGame extends javax.swing.JFrame {
     Graphics2D g2d;
     BufferedImage buffImage;
     public static int score=0;
+    public static Color DisplayCol;
     int roundCounter = 4;
-    int brdSze = 15;
+    int brdSze = 20;
     int[][] GameBoard = new int[brdSze][brdSze];
-    
+    int[] PrizeList = {1,2,3,4,5,10,50};
+    int[] ProbList = {120,80,40,28,24,16,4};
+    public static Color[] ColList = {new Color(255,0,0),new Color(0,0,255),new Color(0,255,0),new Color(128,0,128),new Color(255,87,51),new Color(192,192,192),new Color(215,215,0)};
+
     
     public ChanceGame() {
         initComponents();
@@ -90,6 +94,7 @@ public class ChanceGame extends javax.swing.JFrame {
         );
 
         jButton2.setText("Next");
+        jButton2.setBorderPainted(false);
         jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton2MouseClicked(evt);
@@ -160,7 +165,7 @@ public class ChanceGame extends javax.swing.JFrame {
             }           
         }
         System.out.println(jPanel1.getPreferredSize().width);
-        jLabel1.setSize(new Dimension(this.getSize().width,this.getSize().height));
+        //jLabel1.setSize(new Dimension(this.getSize().width,this.getSize().height));
         jLabel1.setIcon(new ImageIcon(buffImage));
     }
     
@@ -189,29 +194,27 @@ public class ChanceGame extends javax.swing.JFrame {
         for(int row = 0; row <brdSze; row ++){
             for(int col = 0; col < brdSze; col++){
                 if(mouseP.y>row*incre && mouseP.y<row*incre+incre && mouseP.x>col*incre && mouseP.x<col*incre+incre){
-                    if(GameBoard[row][col] == 6){
-                        g2d.setColor(new Color(0,255,0)); 
-                        g2d.fillRect(col*incre+2, row*incre+2, incre-4, incre-4);
-                    }else if(GameBoard[row][col] == 3){
-                        g2d.setColor(new Color(255,0,0)); 
-                        g2d.fillRect(col*incre+2, row*incre+2, incre-4, incre-4);
-                    }else if(GameBoard[row][col] == 1){
-                        g2d.setColor(new Color(0,0,255)); 
-                        g2d.fillRect(col*incre+2, row*incre+2, incre-4, incre-4);                             
+                    if(GameBoard[row][col] != 0){
+                        int ind = 0;
+                        while(PrizeList[ind] != GameBoard[row][col]){
+                            ind ++;
+                        }
+                        DisplayCol = ColList[ind];
+                        new ScoreWindow().setVisible(true);
+                        score = GameBoard[row][col];
+                        g2d.setColor(ColList[ind]); 
                     }else{
-                        g2d.setColor(new Color(0,0,0)); 
-                        g2d.fillRect(col*incre+2, row*incre+2, incre-4, incre-4);                               
-                    }
+                        DisplayCol = new Color(0,0,0);
+                        new ScoreWindow().setVisible(true);
+                        g2d.setColor(DisplayCol);                         
+                    }                    
+                    g2d.fillRect(col*incre+2, row*incre+2, incre-4, incre-4);
                     score+=GameBoard[row][col];  
-                    jLabel2.setText(""+score);
+                    jLabel3.setText(""+score);
                 }
             }
         }
-        jLabel1.setIcon(new ImageIcon(buffImage));
-        if(roundCounter <0){            
-            roundCounter = 4;
-            new ScoreWindow().setVisible(true);
-        }
+        jLabel1.setIcon(new ImageIcon(buffImage));                
     }//GEN-LAST:event_jPanel1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -223,6 +226,7 @@ public class ChanceGame extends javax.swing.JFrame {
         roundCounter = 4;
         randomize();
         updateGrid();
+        jLabel3.setText(""+score);
     }//GEN-LAST:event_jButton2MouseClicked
 
     public void randomize(){
@@ -231,33 +235,16 @@ public class ChanceGame extends javax.swing.JFrame {
                 GameBoard[r][c] = 0;
             }
         }
-        
-        for(int i = 0; i<(brdSze*brdSze*0.1); i++){
-            int y = (int)(brdSze*Math.random());
-            int x = (int)(brdSze*Math.random());
-            while(GameBoard[y][x] != 0){
-                y = (int)(brdSze*Math.random());
-                x = (int)(brdSze*Math.random());
-            }
-            GameBoard[y][x] = 6;
-        }        
-        for(int i = 0; i<(brdSze*brdSze*0.2); i++){
-            int y = (int)(brdSze*Math.random());
-            int x = (int)(brdSze*Math.random());
-            while(GameBoard[y][x] != 0){
-                y = (int)(brdSze*Math.random());
-                x = (int)(brdSze*Math.random());
-            }
-            GameBoard[y][x] = 3;      
-        }        
-        for(int i = 0; i<(brdSze*brdSze*0.4); i++){
-            int y = (int)(brdSze*Math.random());
-            int x = (int)(brdSze*Math.random());
-            while(GameBoard[y][x] != 0){
-                y = (int)(brdSze*Math.random());
-                x = (int)(brdSze*Math.random());
-            }
-            GameBoard[y][x] = 1;
+        for(int cnt = 0; cnt<ProbList.length; cnt++){
+            for(int i = 0; i<ProbList[cnt]; i++){
+                int y = (int)(brdSze*Math.random());
+                int x = (int)(brdSze*Math.random());
+                while(GameBoard[y][x] != 0){
+                    y = (int)(brdSze*Math.random());
+                    x = (int)(brdSze*Math.random());
+                }
+                GameBoard[y][x] = PrizeList[cnt];
+            }                
         }
     }
     
